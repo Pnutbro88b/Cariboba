@@ -768,3 +768,80 @@
             const taskCnt = await c.getTaskCountForOwner(addr);
             const remCnt = await c.getReminderCountForOwner(addr);
             const sessCnt = await c.getSessionCountForOwner(addr);
+            const bal = await c.balanceOf(addr);
+            const balEther = weiToEther(bal.toString());
+            document.getElementById('cbbYourSummary').innerHTML =
+              '<div class="cbb-info-row"><span>Your tasks</span><span>' + taskCnt.toString() + '</span></div>' +
+              '<div class="cbb-info-row"><span>Your reminders</span><span>' + remCnt.toString() + '</span></div>' +
+              '<div class="cbb-info-row"><span>Your sessions</span><span>' + sessCnt.toString() + '</span></div>' +
+              '<div class="cbb-info-row"><span>Your balance (wei)</span><span>' + bal.toString() + '</span></div>' +
+              '<div class="cbb-info-row"><span>Your balance (ether)</span><span>' + balEther + '</span></div>';
+          } catch (e2) {
+            document.getElementById('cbbYourSummary').innerHTML = '<div class="cbb-empty">Could not load your summary.</div>';
+          }
+        } else {
+          document.getElementById('cbbYourSummary').innerHTML = '<div class="cbb-empty">Connect wallet to see your summary.</div>';
+        }
+      }
+
+      async function loadTasks() {
+        const c = await ensureContract();
+        const listEl = document.getElementById('cbbTasksList');
+        try {
+          const len = await c.getTaskIdsLength();
+          const n = Math.min(Number(len), BATCH_SIZE_TASKS);
+          if (n === 0) {
+            listEl.innerHTML = '<div class="cbb-empty">No tasks yet.</div>';
+            listEl.className = '';
+            return;
+          }
+          let html = '<ul class="cbb-list">';
+          for (let i = 0; i < n; i++) {
+            const id = await c.getTaskIdAt(i);
+            const t = await c.getTask(id);
+            html += renderTaskRow(id, t[0], Number(t[1]), t[2].toString(), Number(t[3]), t[4].toString());
+          }
+          html += '</ul>';
+          listEl.innerHTML = html;
+          listEl.className = '';
+        } catch (e) {
+          listEl.innerHTML = '<div class="cbb-empty">Error: ' + (e.message || e) + '</div>';
+          listEl.className = '';
+        }
+      }
+
+      async function loadReminders() {
+        const c = await ensureContract();
+        const listEl = document.getElementById('cbbRemindersList');
+        try {
+          const len = await c.getReminderIdsLength();
+          const n = Math.min(Number(len), BATCH_SIZE_REMINDERS);
+          if (n === 0) {
+            listEl.innerHTML = '<div class="cbb-empty">No reminders yet.</div>';
+            listEl.className = '';
+            return;
+          }
+          let html = '<ul class="cbb-list">';
+          for (let i = 0; i < n; i++) {
+            const id = await c.getReminderIdAt(i);
+            const r = await c.getReminder(id);
+            html += renderReminderRow(id, r[0], r[1].toString(), r[3]);
+          }
+          html += '</ul>';
+          listEl.innerHTML = html;
+          listEl.className = '';
+        } catch (e) {
+          listEl.innerHTML = '<div class="cbb-empty">Error: ' + (e.message || e) + '</div>';
+          listEl.className = '';
+        }
+      }
+
+      async function loadSessions() {
+        const c = await ensureContract();
+        const listEl = document.getElementById('cbbSessionsList');
+        try {
+          const len = await c.getSessionIdsLength();
+          const n = Math.min(Number(len), BATCH_SIZE_SESSIONS);
+          if (n === 0) {
+            listEl.innerHTML = '<div class="cbb-empty">No sessions yet.</div>';
+            listEl.className = '';
