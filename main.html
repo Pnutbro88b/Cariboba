@@ -999,3 +999,80 @@
           showMsg('Cancel failed: ' + (e.message || e), true);
         }
       }
+
+      function refresh() {
+        loadDashboard();
+        loadTasks();
+        loadReminders();
+        loadSessions();
+        loadIntents();
+        showMsg('Refreshed.', false);
+      }
+
+      document.getElementById('cbbConnectBtn').addEventListener('click', connect);
+      document.getElementById('cbbRefreshBtn').addEventListener('click', refresh);
+      document.querySelectorAll('.cbb-tab').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          document.querySelectorAll('.cbb-tab').forEach(function(b) { b.classList.remove('active'); });
+          document.querySelectorAll('.cbb-panel').forEach(function(p) { p.classList.remove('visible'); });
+          btn.classList.add('active');
+          const pid = btn.getAttribute('data-panel');
+          const panel = document.getElementById('panel-' + pid);
+          if (panel) panel.classList.add('visible');
+          if (pid === 'tasks') loadTasks();
+          if (pid === 'reminders') loadReminders();
+          if (pid === 'sessions') loadSessions();
+          if (pid === 'intents') loadIntents();
+          if (pid === 'help') { /* static content */ }
+        });
+      });
+
+      document.getElementById('cbbEnqueueTaskBtn').addEventListener('click', enqueueTask);
+      document.getElementById('cbbSetReminderBtn').addEventListener('click', setReminder);
+      document.getElementById('cbbCreateSessionBtn').addEventListener('click', createSession);
+      document.getElementById('cbbCompleteTaskBtn').addEventListener('click', completeTask);
+      document.getElementById('cbbCancelTaskBtn').addEventListener('click', cancelTask);
+
+      async function closeSession() {
+        const sessionId = document.getElementById('cbbCloseSessionId').value.trim();
+        if (!sessionId || !sessionId.startsWith('0x')) { showMsg('Enter session ID (0x…).', true); return; }
+        try {
+          const s = await ensureSigner();
+          const c = new ethers.Contract(HARIBA_ADDRESS, HARIBA_ABI, s);
+          const tx = await c.closeSession(sessionId);
+          await tx.wait();
+          showMsg('Session closed.', false);
+          loadDashboard();
+          loadSessions();
+        } catch (e) {
+          showMsg('Close session failed: ' + (e.message || e), true);
+        }
+      }
+      document.getElementById('cbbCloseSessionBtn').addEventListener('click', closeSession);
+
+      document.getElementById('cbbContractAddr').textContent = shortAddr(HARIBA_ADDRESS);
+
+      function weiToEther(wei) {
+        if (!wei || wei === '0') return '0';
+        const w = ethers.toBigInt(wei);
+        const one = ethers.toBigInt('1000000000000000000');
+        const div = w / one;
+        const rem = w % one;
+        if (rem === 0n) return div.toString();
+        const remStr = rem.toString().padStart(18, '0').replace(/0+$/, '');
+        return div.toString() + '.' + remStr;
+      }
+
+      function validateTaskIdInput(id) {
+        const h = parseBytes32Hex(id);
+        return h !== null;
+      }
+
+      function getDefaultDueTimestamp() {
+        const t = Math.floor(Date.now() / 1000) + 86400;
+        return t.toString();
+      }
+
+      function getDefaultTriggerTimestamp() {
+        return getDefaultDueTimestamp();
+      }
