@@ -1076,3 +1076,80 @@
       function getDefaultTriggerTimestamp() {
         return getDefaultDueTimestamp();
       }
+
+      document.getElementById('cbbTaskDue').placeholder = 'e.g. ' + getDefaultDueTimestamp();
+      document.getElementById('cbbReminderTrigger').placeholder = 'e.g. ' + getDefaultTriggerTimestamp();
+
+      function copyToClipboard(text) {
+        if (!navigator.clipboard) return false;
+        navigator.clipboard.writeText(text).then(function() { showMsg('Copied to clipboard.', false); }).catch(function() {});
+        return true;
+      }
+
+      function renderTaskRow(id, owner, kind, dueAt, status, createdAt) {
+        const statusClass = status === 0 ? 'pending' : status === 1 ? 'done' : 'cancel';
+        return '<li><span class="id-short" title="' + id + '">' + shortId(id) + '</span> <span class="owner-short">' + shortAddr(owner) + '</span> ' + taskKindName(kind) + ' <span class="cbb-badge ' + statusClass + '">' + taskStatusName(status) + '</span> <span class="cbb-timestamp">due ' + formatTimestamp(dueAt) + '</span></li>';
+      }
+
+      function renderReminderRow(id, owner, triggerAt, fired) {
+        const firedClass = fired ? 'fired' : 'pending';
+        return '<li><span class="id-short" title="' + id + '">' + shortId(id) + '</span> <span class="owner-short">' + shortAddr(owner) + '</span> <span class="cbb-timestamp">trigger ' + formatTimestamp(triggerAt) + '</span> <span class="cbb-badge ' + firedClass + '">' + (fired ? 'Fired' : 'Pending') + '</span></li>';
+      }
+
+      function renderSessionRow(id, owner, startedAt, closedAt, responseCount) {
+        const closedStr = closedAt === '0' || !closedAt ? 'Open' : formatTimestamp(closedAt);
+        return '<li><span class="id-short" title="' + id + '">' + shortId(id) + '</span> <span class="owner-short">' + shortAddr(owner) + '</span> started ' + formatTimestamp(startedAt) + ' closed ' + closedStr + ' responses ' + (responseCount || '0') + '</li>';
+      }
+
+      function renderIntentRow(id, owner, intentType, createdAt) {
+        const typeStr = intentType < INTENT_TYPE_MAX ? 'Type ' + intentType : '?';
+        return '<li><span class="id-short" title="' + id + '">' + shortId(id) + '</span> <span class="owner-short">' + shortAddr(owner) + '</span> <span class="cbb-intent-type">' + typeStr + '</span> <span class="cbb-timestamp">' + formatTimestamp(createdAt) + '</span></li>';
+      }
+
+      function getChainName(chainId) {
+        const names = { 1: 'Ethereum', 5: 'Goerli', 11155111: 'Sepolia', 137: 'Polygon', 42161: 'Arbitrum One', 10: 'Optimism', 8453: 'Base' };
+        return names[Number(chainId)] || ('Chain ' + chainId);
+      }
+
+      function updateChainDisplay() {
+        if (!provider) return;
+        provider.getNetwork().then(function(net) {
+          document.getElementById('cbbChainId').textContent = getChainName(net.chainId) + ' (' + net.chainId + ')';
+        }).catch(function() {
+          document.getElementById('cbbChainId').textContent = '—';
+        });
+      }
+
+      function onAccountsChanged(accounts) {
+        if (!accounts || accounts.length === 0) {
+          document.getElementById('cbbAddr').textContent = '';
+          document.getElementById('cbbConnectBtn').textContent = 'Connect';
+          document.getElementById('cbbRefreshBtn').style.display = 'none';
+          signer = null;
+          contract = new ethers.Contract(HARIBA_ADDRESS, HARIBA_ABI, provider);
+        } else {
+          document.getElementById('cbbAddr').textContent = shortAddr(accounts[0]);
+          document.getElementById('cbbConnectBtn').textContent = 'Connected';
+          document.getElementById('cbbRefreshBtn').style.display = 'inline-block';
+          provider.getSigner().then(function(s) { signer = s; contract = new ethers.Contract(HARIBA_ADDRESS, HARIBA_ABI, s); });
+          loadDashboard();
+        }
+      }
+
+      if (window.ethereum) {
+        window.ethereum.on('accountsChanged', onAccountsChanged);
+        window.ethereum.on('chainChanged', function() { window.location.reload(); });
+      }
+
+      function fillDefaultDue() {
+        document.getElementById('cbbTaskDue').value = getDefaultDueTimestamp();
+      }
+      function fillDefaultTrigger() {
+        document.getElementById('cbbReminderTrigger').value = getDefaultTriggerTimestamp();
+      }
+      var fillDueBtn = document.createElement('button');
+      fillDueBtn.type = 'button';
+      fillDueBtn.className = 'cbb-btn';
+      fillDueBtn.textContent = 'Fill 1 day from now';
+      fillDueBtn.addEventListener('click', fillDefaultDue);
+      var taskDueInput = document.getElementById('cbbTaskDue');
