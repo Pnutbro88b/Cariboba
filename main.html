@@ -537,3 +537,80 @@
         <h3>Disclaimer</h3>
         <p style="font-size:0.85rem; color: var(--cbb-muted); margin-bottom:0.5rem;">This interface is provided as-is. Always verify the contract address and network before sending funds or signing transactions. On-chain actions are irreversible. The Hariba contract is designed for mainnet safety (reentrancy guard, pause, role-based access) but you should conduct your own audit before high-value use.</p>
       </div>
+      <div class="cbb-card">
+        <h3>Feature summary</h3>
+        <ul style="font-size:0.85rem; color: var(--cbb-muted); padding-left:1.25rem;">
+          <li style="margin-bottom:0.3rem;">Connect wallet and read platform stats, fee, and your counts</li>
+          <li style="margin-bottom:0.3rem;">List tasks, reminders, sessions, intents in batches</li>
+          <li style="margin-bottom:0.3rem;">Enqueue task (with fee), set reminder, create session</li>
+          <li style="margin-bottom:0.3rem;">Complete or cancel task; close session</li>
+          <li style="margin-bottom:0.3rem;">Human-readable timestamps and chain name</li>
+          <li style="margin-bottom:0.3rem;">Help and About tabs with full reference</li>
+        </ul>
+      </div>
+      <div class="cbb-card">
+        <h3>Keyboard and accessibility</h3>
+        <p style="font-size:0.85rem; color: var(--cbb-muted);">Use Tab to move between controls. Buttons and inputs have visible focus styles. All main actions are available from the tab panels; refresh the page to reload data or switch chain.</p>
+      </div>
+      <div class="cbb-card">
+        <h3>RPC and network</h3>
+        <p style="font-size:0.85rem; color: var(--cbb-muted); margin-bottom:0.5rem;">Reads use the provider from your wallet (e.g. MetaMask), so the RPC is whatever your wallet is connected to. If you see timeouts or empty data, try switching network or refreshing. Writes are sent through the same provider and require confirmation in the wallet.</p>
+        <p style="font-size:0.8rem; color: var(--cbb-muted);">Supported chains: any EVM chain where Hariba is deployed. The UI shows the current chain name and ID in the About tab after connection.</p>
+      </div>
+      <div class="cbb-card">
+        <h3>Feedback and intents</h3>
+        <p style="font-size:0.85rem; color: var(--cbb-muted);">Submit feedback with a reference ID (bytes32) and rating 1–5. Register intents with type 0–7 for future NLU or slot classification. These are simple on-chain records; full payloads can live off-chain keyed by ref or intent ID.</p>
+      </div>
+      <div class="cbb-card">
+        <h3>Version and updates</h3>
+        <p style="font-size:0.85rem; color: var(--cbb-muted);">Cariboba is a static single-file UI. To update the contract address or ABI, edit this HTML file. No backend or build step is required. Ethers.js is loaded from a CDN; for offline use, host the library locally. The Hariba contract is immutable after deploy; only config (fee, caps) and pause state can change.</p>
+      </div>
+      <div class="cbb-card">
+        <h3>Glossary</h3>
+        <div class="cbb-info-row"><span>Hariba</span><span>On-chain PA/assistant ledger contract (tasks, reminders, sessions, intents, preferences)</span></div>
+        <div class="cbb-info-row"><span>Cariboba</span><span>This web UI for Hariba</span></div>
+        <div class="cbb-info-row"><span>Steward</span><span>Role that can pause, set max tasks/reminders per user, and fee</span></div>
+        <div class="cbb-info-row"><span>Vault</span><span>Holds deposited wei; only role that can process withdrawals to users</span></div>
+        <div class="cbb-info-row"><span>Oracle</span><span>Can log response hashes and attest sessions</span></div>
+        <div class="cbb-info-row"><span>Relay</span><span>Can fire reminders when trigger time has passed</span></div>
+        <div class="cbb-info-row"><span>Keeper</span><span>Can complete tasks and close sessions on behalf of users</span></div>
+        <div class="cbb-info-row"><span>Curator</span><span>Can record and overwrite slot data for sessions</span></div>
+        <div class="cbb-info-row"><span>Sentinel</span><span>Emergency role that can pause the contract</span></div>
+      </div>
+      <div class="cbb-card">
+        <h3>Hariba events (for indexers)</h3>
+        <p class="cbb-h4">Emitted by the contract; useful for subgraphs and off-chain listeners.</p>
+        <div class="cbb-info-row"><span>TaskEnqueued</span><span>taskId, owner, kind, dueAt, atBlock</span></div>
+        <div class="cbb-info-row"><span>TaskCompleted</span><span>taskId, by, atBlock</span></div>
+        <div class="cbb-info-row"><span>TaskCancelled</span><span>taskId, by, atBlock</span></div>
+        <div class="cbb-info-row"><span>ReminderSet</span><span>reminderId, owner, triggerAt, linkedTaskId, atBlock</span></div>
+        <div class="cbb-info-row"><span>ReminderFired</span><span>reminderId, owner, atBlock</span></div>
+        <div class="cbb-info-row"><span>PreferenceStored</span><span>owner, keyHash, atBlock</span></div>
+        <div class="cbb-info-row"><span>SessionCreated</span><span>sessionId, owner, startedAt, atBlock</span></div>
+        <div class="cbb-info-row"><span>SessionClosed</span><span>sessionId, owner, closedAt, atBlock</span></div>
+        <div class="cbb-info-row"><span>ResponseLogged</span><span>sessionId, index, atBlock</span></div>
+        <div class="cbb-info-row"><span>DepositReceived</span><span>from, amountWei, atBlock</span></div>
+        <div class="cbb-info-row"><span>WithdrawalProcessed</span><span>to, amountWei, by, atBlock</span></div>
+        <div class="cbb-info-row"><span>IntentRegistered</span><span>intentId, owner, intentType, atBlock</span></div>
+        <div class="cbb-info-row"><span>FeedbackSubmitted</span><span>refId, from, rating, atBlock</span></div>
+      </div>
+      <div class="cbb-card">
+        <h3>Error codes (revert reasons)</h3>
+        <p class="cbb-h4">Hariba uses custom errors with HRB_ prefix. Common ones:</p>
+        <div class="cbb-info-row"><span>HRB_NotSteward</span><span>Caller is not the steward</span></div>
+        <div class="cbb-info-row"><span>HRB_NotVault</span><span>Caller is not the vault</span></div>
+        <div class="cbb-info-row"><span>HRB_NotOracle</span><span>Caller is not the oracle</span></div>
+        <div class="cbb-info-row"><span>HRB_NotRelay</span><span>Caller is not the relay</span></div>
+        <div class="cbb-info-row"><span>HRB_ZeroAddress</span><span>Zero address not allowed</span></div>
+        <div class="cbb-info-row"><span>HRB_TaskNotFound</span><span>No task for the given ID</span></div>
+        <div class="cbb-info-row"><span>HRB_TaskAlreadyCompleted</span><span>Task already completed</span></div>
+        <div class="cbb-info-row"><span>HRB_ExceedsMaxTasksPerUser</span><span>User at task cap</span></div>
+        <div class="cbb-info-row"><span>HRB_InsufficientDeposit</span><span>Fee or balance too low</span></div>
+        <div class="cbb-info-row"><span>HRB_Paused</span><span>Contract is paused</span></div>
+        <div class="cbb-info-row"><span>HRB_Reentrant</span><span>Reentrancy detected</span></div>
+      </div>
+    </section>
+
+    <footer class="cbb-footer">
+      Cariboba · Hariba PA · EVM
+      <p style="margin-top:0.25rem;">Your PA for life — tasks, reminders, sessions on-chain.</p>
