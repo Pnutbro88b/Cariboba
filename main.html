@@ -152,3 +152,80 @@
       border: 1px solid var(--cbb-border);
     }
     .cbb-hero h2 { font-size: 1.5rem; color: var(--cbb-text); margin-bottom: 0.5rem; font-weight: 600; }
+    .cbb-hero p { font-size: 0.95rem; color: var(--cbb-muted); max-width: 480px; margin: 0 auto; }
+    .cbb-empty { text-align: center; padding: 2rem; color: var(--cbb-muted); font-size: 0.9rem; }
+    .cbb-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .cbb-table th, .cbb-table td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid var(--cbb-border); }
+    .cbb-table th { color: var(--cbb-muted); font-weight: 500; }
+    .cbb-table .mono { font-family: var(--cbb-mono); }
+    .cbb-pill { display: inline-block; padding: 0.2rem 0.5rem; border-radius: 999px; font-size: 0.75rem; background: var(--cbb-surface); color: var(--cbb-muted); }
+    .cbb-divider { height: 1px; background: var(--cbb-border); margin: 1rem 0; }
+    .cbb-h4 { font-size: 0.95rem; color: var(--cbb-muted); margin-bottom: 0.5rem; font-weight: 500; }
+    .cbb-code { font-family: var(--cbb-mono); font-size: 0.8rem; background: var(--cbb-bg); padding: 0.25rem 0.5rem; border-radius: 6px; }
+    .cbb-animate-fade { animation: cbbFade 0.25s ease; }
+    @keyframes cbbFade { from { opacity: 0; } to { opacity: 1; } }
+    .cbb-toolbar { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .cbb-input-sm { width: 80px; font-family: var(--cbb-mono); font-size: 0.85rem; padding: 0.4rem; border: 1px solid var(--cbb-border); border-radius: 8px; background: var(--cbb-bg); color: var(--cbb-text); }
+    .cbb-label-inline { font-size: 0.8rem; color: var(--cbb-muted); margin-right: 0.5rem; }
+    .cbb-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+    .cbb-link { color: var(--cbb-accent); text-decoration: none; font-size: 0.85rem; }
+    .cbb-link:hover { text-decoration: underline; }
+    .cbb-section { margin-bottom: 1.5rem; }
+    .cbb-footer-links { margin-top: 0.5rem; }
+    .cbb-footer-links a { color: var(--cbb-muted); margin: 0 0.5rem; font-size: 0.75rem; }
+    @media (max-width: 480px) {
+      .cbb-header { flex-direction: column; align-items: flex-start; }
+      .cbb-hero h2 { font-size: 1.25rem; }
+      .cbb-stats { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 768px) {
+      .cbb-wrap { padding: 2rem; }
+      .cbb-hero { padding: 2.5rem 1.5rem; }
+    }
+    @media print {
+      .cbb-connect { display: none; }
+      .cbb-tabs { display: none; }
+      .cbb-btn { display: none; }
+      .cbb-panel { display: block !important; }
+      body { background: #fff; color: #111; }
+    }
+    .cbb-focus-visible:focus-visible { outline: 2px solid var(--cbb-accent); outline-offset: 2px; }
+    button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--cbb-accent); outline-offset: 2px; }
+    .cbb-list li:hover { background: var(--cbb-surface); }
+    .cbb-stat:hover { border-color: var(--cbb-accent); }
+    .cbb-card:hover { border-color: var(--cbb-border); }
+    .cbb-intent-type { font-size: 0.8rem; color: var(--cbb-teal); }
+    .cbb-timestamp { font-family: var(--cbb-mono); font-size: 0.8rem; color: var(--cbb-muted); }
+    .cbb-card-footer { margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--cbb-border); font-size: 0.8rem; color: var(--cbb-muted); }
+  </style>
+</head>
+<body>
+  <div class="cbb-wrap">
+    <header class="cbb-header">
+      <div>
+        <div class="cbb-logo">Cariboba</div>
+        <div class="cbb-tagline">Your PA for life — tasks, reminders, sessions on Hariba</div>
+      </div>
+      <div class="cbb-connect">
+        <span class="cbb-addr" id="cbbAddr"></span>
+        <button type="button" class="cbb-btn primary" id="cbbConnectBtn">Connect</button>
+        <button type="button" class="cbb-btn" id="cbbRefreshBtn" style="display:none;">Refresh</button>
+      </div>
+    </header>
+
+    <div class="cbb-hero">
+      <h2>AI assistant &amp; your PA for life</h2>
+      <p>Cariboba talks to the Hariba contract: view and manage tasks, reminders, and sessions on-chain. Connect your wallet to see your PA dashboard.</p>
+    </div>
+
+    <div class="cbb-tabs">
+      <button type="button" class="cbb-tab active" data-panel="dashboard">Dashboard</button>
+      <button type="button" class="cbb-tab" data-panel="tasks">Tasks</button>
+      <button type="button" class="cbb-tab" data-panel="reminders">Reminders</button>
+      <button type="button" class="cbb-tab" data-panel="sessions">Sessions</button>
+      <button type="button" class="cbb-tab" data-panel="actions">Actions</button>
+      <button type="button" class="cbb-tab" data-panel="intents">Intents</button>
+      <button type="button" class="cbb-tab" data-panel="help">Help</button>
+      <button type="button" class="cbb-tab" data-panel="about">About</button>
+    </div>
+
