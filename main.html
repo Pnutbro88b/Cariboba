@@ -75,3 +75,80 @@
       transition: all 0.2s;
     }
     .cbb-tab:hover { color: var(--cbb-text); }
+    .cbb-tab.active { background: var(--cbb-accent-dim); color: var(--cbb-accent); border-color: var(--cbb-accent); }
+    .cbb-panel { display: none; }
+    .cbb-panel.visible { display: block; }
+    .cbb-card {
+      background: var(--cbb-card);
+      border: 1px solid var(--cbb-border);
+      border-radius: var(--cbb-radius);
+      padding: 1.35rem;
+      margin-bottom: 1rem;
+    }
+    .cbb-card h3 { font-size: 1.05rem; margin-bottom: 0.8rem; color: var(--cbb-teal); font-weight: 600; }
+    .cbb-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.85rem; margin-bottom: 1.25rem; }
+    .cbb-stat { background: var(--cbb-surface); border: 1px solid var(--cbb-border); border-radius: 10px; padding: 1rem; text-align: center; }
+    .cbb-stat .val { font-size: 1.15rem; color: var(--cbb-accent); font-family: var(--cbb-mono); }
+    .cbb-stat .lbl { font-size: 0.75rem; color: var(--cbb-muted); margin-top: 0.25rem; }
+    .cbb-form-group { margin-bottom: 1rem; }
+    .cbb-form-group label { display: block; font-size: 0.85rem; margin-bottom: 0.4rem; color: var(--cbb-muted); }
+    .cbb-form-group input, .cbb-form-group select {
+      width: 100%;
+      font-family: var(--cbb-mono);
+      font-size: 0.9rem;
+      padding: 0.55rem 0.85rem;
+      border: 1px solid var(--cbb-border);
+      border-radius: 10px;
+      background: var(--cbb-bg);
+      color: var(--cbb-text);
+    }
+    .cbb-form-group input:focus, .cbb-form-group select:focus { outline: none; border-color: var(--cbb-accent); }
+    .cbb-msg { padding: 0.65rem 1rem; border-radius: 10px; margin-bottom: 0.85rem; font-size: 0.85rem; }
+    .cbb-msg.err { background: rgba(251, 113, 133, 0.12); border: 1px solid var(--cbb-rose); color: #fda4af; }
+    .cbb-msg.ok { background: rgba(45, 212, 191, 0.12); border: 1px solid var(--cbb-teal); color: var(--cbb-teal); }
+    .cbb-list { list-style: none; }
+    .cbb-list li {
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid var(--cbb-border);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .cbb-list li:last-child { border-bottom: none; }
+    .cbb-list .id-short { font-family: var(--cbb-mono); font-size: 0.8rem; color: var(--cbb-muted); }
+    .cbb-list .owner-short { font-family: var(--cbb-mono); font-size: 0.8rem; color: var(--cbb-teal); }
+    .cbb-badge { display: inline-block; padding: 0.25rem 0.6rem; border-radius: 8px; font-size: 0.75rem; font-weight: 500; }
+    .cbb-badge.pending { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .cbb-badge.done { background: rgba(45, 212, 191, 0.2); color: var(--cbb-teal); }
+    .cbb-badge.cancel { background: rgba(148, 163, 184, 0.2); color: var(--cbb-muted); }
+    .cbb-badge.fired { background: rgba(124, 58, 237, 0.25); color: var(--cbb-accent); }
+    .cbb-loading { text-align: center; padding: 1.75rem; color: var(--cbb-muted); }
+    footer.cbb-footer { margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--cbb-border); font-size: 0.75rem; color: var(--cbb-muted); text-align: center; }
+    .cbb-chat-area {
+      min-height: 200px;
+      border: 1px solid var(--cbb-border);
+      border-radius: var(--cbb-radius);
+      background: var(--cbb-bg);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .cbb-chat-line { margin-bottom: 0.5rem; }
+    .cbb-chat-line .role { font-weight: 600; color: var(--cbb-accent); margin-right: 0.5rem; }
+    .cbb-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 640px) { .cbb-grid-2 { grid-template-columns: 1fr; } }
+    .cbb-info-row { display: flex; justify-content: space-between; padding: 0.45rem 0; border-bottom: 1px solid var(--cbb-border); font-size: 0.85rem; }
+    .cbb-info-row:last-child { border-bottom: none; }
+    .cbb-hero {
+      text-align: center;
+      padding: 2rem 1rem;
+      margin-bottom: 1.5rem;
+      border-radius: var(--cbb-radius);
+      background: linear-gradient(135deg, var(--cbb-accent-dim) 0%, transparent 60%);
+      border: 1px solid var(--cbb-border);
+    }
+    .cbb-hero h2 { font-size: 1.5rem; color: var(--cbb-text); margin-bottom: 0.5rem; font-weight: 600; }
