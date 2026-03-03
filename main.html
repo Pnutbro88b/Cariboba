@@ -460,3 +460,80 @@
         <div class="cbb-section">
           <div class="cbb-h4">Do I need to pay to enqueue a task?</div>
           <p style="font-size:0.85rem; color: var(--cbb-muted);">Yes. The contract charges a configurable fee in wei (set by the steward). Check the Dashboard for the current fee.</p>
+        </div>
+        <div class="cbb-divider"></div>
+        <div class="cbb-section">
+          <div class="cbb-h4">Who can fire a reminder?</div>
+          <p style="font-size:0.85rem; color: var(--cbb-muted);">Only the relay role can call fireReminder. Off-chain keepers watch trigger times and call the contract when due.</p>
+        </div>
+      </div>
+      <div class="cbb-card">
+        <h3>Hariba constants (on-chain)</h3>
+        <p class="cbb-h4">These limits are enforced by the contract. Steward can change max per user and fee; global caps are fixed.</p>
+        <div class="cbb-info-row"><span>Max tasks (global)</span><span>4096</span></div>
+        <div class="cbb-info-row"><span>Max reminders (global)</span><span>2048</span></div>
+        <div class="cbb-info-row"><span>Max sessions per owner</span><span>256</span></div>
+        <div class="cbb-info-row"><span>Max responses per session</span><span>128</span></div>
+        <div class="cbb-info-row"><span>View batch size</span><span>32</span></div>
+        <div class="cbb-info-row"><span>Rating range (feedback)</span><span>1–5</span></div>
+      </div>
+      <div class="cbb-card">
+        <h3>Security notes</h3>
+        <p style="font-size:0.85rem; color: var(--cbb-muted); margin-bottom:0.5rem;">Hariba uses reentrancy guards and role-based access. Only the vault can process withdrawals from the vault balance. Always verify the contract address and chain before sending transactions. Cariboba does not store your private key; signing is done in your wallet.</p>
+      </div>
+      <div class="cbb-card">
+        <h3>Links and deployment</h3>
+        <p class="cbb-h4">Replace the contract address in this file if you deploy Hariba to a different network. The same ABI applies. For HaZZa (Java) or other clients, use the same address and selectors. Block explorers: paste the contract address to see transactions and events.</p>
+      </div>
+      <div class="cbb-card">
+        <h3>Tech stack (Cariboba)</h3>
+        <ul style="list-style:none; font-size:0.85rem; color: var(--cbb-muted);">
+          <li style="margin-bottom:0.35rem;">· HTML5, CSS3 (custom properties, flexbox, grid)</li>
+          <li style="margin-bottom:0.35rem;">· Vanilla JavaScript (no framework)</li>
+          <li style="margin-bottom:0.35rem;">· Ethers.js v6 (BrowserProvider, Contract, signer)</li>
+          <li style="margin-bottom:0.35rem;">· Fonts: Outfit (UI), JetBrains Mono (code)</li>
+          <li style="margin-bottom:0.35rem;">· Single-file deployment; no build step required</li>
+        </ul>
+      </div>
+      <div class="cbb-card">
+        <h3>Hariba contract (tech)</h3>
+        <ul style="list-style:none; font-size:0.85rem; color: var(--cbb-muted);">
+          <li style="margin-bottom:0.35rem;">· Solidity ^0.8.20</li>
+          <li style="margin-bottom:0.35rem;">· Custom errors (HRB_*), events, immutable roles</li>
+          <li style="margin-bottom:0.35rem;">· Reentrancy guard, pause, configurable fee and caps</li>
+          <li style="margin-bottom:0.35rem;">· No external token dependency; native wei only for fee and deposits</li>
+        </ul>
+      </div>
+      <div class="cbb-card">
+        <h3>Browser support and privacy</h3>
+        <p style="font-size:0.85rem; color: var(--cbb-muted); margin-bottom:0.5rem;">Cariboba works in any modern browser that supports ES6 and has a Web3 wallet (e.g. MetaMask) or injects window.ethereum. No server round-trip for contract reads; RPC is used via the wallet or default provider. We do not collect or store your data; all state is on-chain or in your wallet.</p>
+      </div>
+      <div class="cbb-card">
+        <h3>Status and kind reference</h3>
+        <table class="cbb-table" style="font-size:0.8rem;">
+          <thead><tr><th>Task status</th><th>Value</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>Pending</td><td class="cbb-mono">0</td><td>Not yet completed or cancelled</td></tr>
+            <tr><td>Completed</td><td class="cbb-mono">1</td><td>Marked done by owner/keeper/steward</td></tr>
+            <tr><td>Cancelled</td><td class="cbb-mono">2</td><td>Cancelled by owner or steward</td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:0.75rem;"></div>
+        <table class="cbb-table" style="font-size:0.8rem;">
+          <thead><tr><th>Task kind</th><th>Value</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>Generic</td><td class="cbb-mono">0</td><td>General task</td></tr>
+            <tr><td>Call</td><td class="cbb-mono">1</td><td>Call-related</td></tr>
+            <tr><td>Meeting</td><td class="cbb-mono">2</td><td>Meeting</td></tr>
+            <tr><td>Deadline</td><td class="cbb-mono">3</td><td>Deadline</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="cbb-card">
+        <h3>Related</h3>
+        <p style="font-size:0.85rem; color: var(--cbb-muted);">HaZZa is the Java client for Hariba (single-file app): tasks, reminders, sessions, intents, CSV export, batch views. Use the same contract address and ABI. For mainnet deployment, replace all constructor and constant addresses in the Hariba contract with your own EIP-55 addresses.</p>
+      </div>
+      <div class="cbb-card">
+        <h3>Disclaimer</h3>
+        <p style="font-size:0.85rem; color: var(--cbb-muted); margin-bottom:0.5rem;">This interface is provided as-is. Always verify the contract address and network before sending funds or signing transactions. On-chain actions are irreversible. The Hariba contract is designed for mainnet safety (reentrancy guard, pause, role-based access) but you should conduct your own audit before high-value use.</p>
+      </div>
