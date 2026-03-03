@@ -614,3 +614,80 @@
     <footer class="cbb-footer">
       Cariboba · Hariba PA · EVM
       <p style="margin-top:0.25rem;">Your PA for life — tasks, reminders, sessions on-chain.</p>
+      <div class="cbb-footer-links">
+        <a href="#">Dashboard</a>
+        <a href="#">Tasks</a>
+        <a href="#">Reminders</a>
+        <a href="#">Sessions</a>
+        <a href="#">Intents</a>
+        <a href="#">Help</a>
+        <a href="#">About</a>
+      </div>
+      <p style="margin-top:0.5rem;">AI assistant and your PA for life — on-chain.</p>
+      <p style="margin-top:0.25rem; font-size:0.7rem;">Hariba contract: tasks, reminders, sessions, intents, preferences. Cariboba UI. HaZZa Java client.</p>
+    </footer>
+  </div>
+
+  <script>
+    (function() {
+      const HARIBA_ABI = [
+        'function getPlatformStats() view returns (uint256 taskCount, uint256 reminderCount, uint256 sessionCount, uint256 intentCount, uint256 deployBlockNum, bool paused)',
+        'function getTaskIdsLength() view returns (uint256)',
+        'function getTaskIdAt(uint256 index) view returns (bytes32)',
+        'function getTask(bytes32 taskId) view returns (address owner, uint8 kind, uint256 dueAt, uint8 status, uint256 createdAt)',
+        'function getReminderIdsLength() view returns (uint256)',
+        'function getReminderIdAt(uint256 index) view returns (bytes32)',
+        'function getReminder(bytes32 reminderId) view returns (address owner, uint256 triggerAt, bytes32 linkedTaskId, bool fired, uint256 createdAt)',
+        'function getSessionIdsLength() view returns (uint256)',
+        'function getSessionIdAt(uint256 index) view returns (bytes32)',
+        'function getSession(bytes32 sessionId) view returns (address owner, uint256 startedAt, uint256 closedAt, uint256 responseCount)',
+        'function getIntentIdsLength() view returns (uint256)',
+        'function getTaskCountForOwner(address owner) view returns (uint256)',
+        'function getReminderCountForOwner(address owner) view returns (uint256)',
+        'function getSessionCountForOwner(address owner) view returns (uint256)',
+        'function feeWei() view returns (uint256)',
+        'function enqueueTask(uint8 kind, uint256 dueAt) payable',
+        'function setReminder(uint256 triggerAt, bytes32 linkedTaskId)',
+        'function createSession()',
+        'function completeTask(bytes32 taskId)',
+        'function cancelTask(bytes32 taskId)',
+        'function closeSession(bytes32 sessionId)',
+        'function balanceOf(address) view returns (uint256)',
+        'function getIntentIdsLength() view returns (uint256)',
+        'function getIntentIdAt(uint256 index) view returns (bytes32)',
+        'function getIntent(bytes32 intentId) view returns (address owner, uint8 intentType, uint256 createdAt)'
+      ];
+      const HARIBA_ADDRESS = '0x6c2e9a5f1d8b4037e1c6a0f4d9b2e6c0a3f7d1b5e8';
+      const BATCH_SIZE_TASKS = 24;
+      const BATCH_SIZE_REMINDERS = 24;
+      const BATCH_SIZE_SESSIONS = 24;
+      const BATCH_SIZE_INTENTS = 24;
+      const TASK_KIND_NAMES = ['Generic', 'Call', 'Meeting', 'Deadline'];
+      const INTENT_TYPE_MAX = 8;
+
+      /*
+       * Cariboba connects to the Hariba contract. Hariba is an on-chain PA and assistant ledger.
+       * Tasks: enqueue with kind (0=generic, 1=call, 2=meeting, 3=deadline) and due timestamp; pay fee.
+       * Reminders: set trigger time and optional linked task ID; only relay can fire when due.
+       * Sessions: create and close; oracle logs response hashes; curator records slot data.
+       * Intents: register with type 0-7 for NLU/slot use. Preferences: store by key hash (bytes32).
+       * All role addresses (steward, vault, oracle, relay, keeper, curator, sentinel) are immutable.
+       * Reentrancy guard and pause are used for mainnet safety.
+       * This UI uses ethers v6 and eth_call for reads; writes require a connected signer and gas.
+       */
+
+      let provider = null;
+      let signer = null;
+      let contract = null;
+
+      function showMsg(text, isErr) {
+        const el = document.getElementById('cbbMsg');
+        el.textContent = text;
+        el.className = 'cbb-msg ' + (isErr ? 'err' : 'ok');
+        el.style.display = 'block';
+        setTimeout(function() { el.style.display = 'none'; }, 6000);
+      }
+
+      function shortAddr(addr) {
+        if (!addr || addr.length < 10) return addr;
+        return addr.slice(0, 6) + '…' + addr.slice(-4);
