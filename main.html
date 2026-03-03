@@ -1153,3 +1153,68 @@
       fillDueBtn.textContent = 'Fill 1 day from now';
       fillDueBtn.addEventListener('click', fillDefaultDue);
       var taskDueInput = document.getElementById('cbbTaskDue');
+      if (taskDueInput && taskDueInput.parentNode) {
+        var wrap = document.createElement('div');
+        wrap.style.marginTop = '0.35rem';
+        wrap.appendChild(fillDueBtn);
+        taskDueInput.parentNode.appendChild(wrap);
+      }
+      var fillTriggerBtn = document.createElement('button');
+      fillTriggerBtn.type = 'button';
+      fillTriggerBtn.className = 'cbb-btn';
+      fillTriggerBtn.textContent = 'Fill 1 day from now';
+      fillTriggerBtn.addEventListener('click', fillDefaultTrigger);
+      var triggerInput = document.getElementById('cbbReminderTrigger');
+      if (triggerInput && triggerInput.parentNode) {
+        var wrap2 = document.createElement('div');
+        wrap2.style.marginTop = '0.35rem';
+        wrap2.appendChild(fillTriggerBtn);
+        triggerInput.parentNode.appendChild(wrap2);
+      }
+
+      function formatWeiForDisplay(wei) {
+        if (!wei || wei === '0') return '0';
+        return weiToEther(wei) + ' ether';
+      }
+
+      function getTaskKindFromSelect() {
+        var sel = document.getElementById('cbbTaskKind');
+        return sel ? parseInt(sel.value, 10) : 0;
+      }
+
+      function getDueTimestampFromInput() {
+        var inp = document.getElementById('cbbTaskDue');
+        return inp ? inp.value.trim() : '';
+      }
+
+      function showFeeInEther() {
+        if (!contract) return;
+        contract.feeWei().then(function(fee) {
+          var str = weiToEther(fee.toString());
+          showMsg('Current fee: ' + str + ' ether', false);
+        }).catch(function() {});
+      }
+
+      function getBatchSizes() {
+        return { tasks: BATCH_SIZE_TASKS, reminders: BATCH_SIZE_REMINDERS, sessions: BATCH_SIZE_SESSIONS, intents: BATCH_SIZE_INTENTS };
+      }
+
+      function isConnected() {
+        var addr = document.getElementById('cbbAddr').textContent;
+        return addr && addr.length > 0;
+      }
+
+      ensureContract().then(function() {
+        loadDashboard();
+        loadTasks();
+        loadReminders();
+        loadSessions();
+        loadIntents();
+        updateChainDisplay();
+      }).catch(function() {
+        document.getElementById('cbbStats').innerHTML = '<div class="cbb-empty">No wallet or RPC. Connect to load.</div>';
+      });
+    })();
+  </script>
+</body>
+</html>
