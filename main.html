@@ -845,3 +845,80 @@
           if (n === 0) {
             listEl.innerHTML = '<div class="cbb-empty">No sessions yet.</div>';
             listEl.className = '';
+            return;
+          }
+          let html = '<ul class="cbb-list">';
+          for (let i = 0; i < n; i++) {
+            const id = await c.getSessionIdAt(i);
+            const s = await c.getSession(id);
+            html += renderSessionRow(id, s[0], s[1].toString(), s[2].toString(), s[3].toString());
+          }
+          html += '</ul>';
+          listEl.innerHTML = html;
+          listEl.className = '';
+        } catch (e) {
+          listEl.innerHTML = '<div class="cbb-empty">Error: ' + (e.message || e) + '</div>';
+          listEl.className = '';
+        }
+      }
+
+      async function loadIntents() {
+        const c = await ensureContract();
+        const listEl = document.getElementById('cbbIntentsList');
+        try {
+          const len = await c.getIntentIdsLength();
+          const n = Math.min(Number(len), BATCH_SIZE_INTENTS);
+          if (n === 0) {
+            listEl.innerHTML = '<div class="cbb-empty">No intents yet.</div>';
+            listEl.className = '';
+            return;
+          }
+          let html = '<ul class="cbb-list">';
+          for (let i = 0; i < n; i++) {
+            const id = await c.getIntentIdAt(i);
+            const in_ = await c.getIntent(id);
+            html += renderIntentRow(id, in_[0], Number(in_[1]), in_[2].toString());
+          }
+          html += '</ul>';
+          listEl.innerHTML = html;
+          listEl.className = '';
+        } catch (e) {
+          listEl.innerHTML = '<div class="cbb-empty">Error: ' + (e.message || e) + '</div>';
+          listEl.className = '';
+        }
+      }
+
+      async function connect() {
+        if (!window.ethereum) {
+          showMsg('No wallet found. Install MetaMask or another Web3 wallet.', true);
+          return;
+        }
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+          const addr = accounts[0];
+          document.getElementById('cbbAddr').textContent = addr ? shortAddr(addr) : '';
+          document.getElementById('cbbConnectBtn').textContent = addr ? 'Connected' : 'Connect';
+          document.getElementById('cbbRefreshBtn').style.display = addr ? 'inline-block' : 'none';
+          provider = new ethers.BrowserProvider(window.ethereum);
+          signer = await provider.getSigner();
+          contract = new ethers.Contract(HARIBA_ADDRESS, HARIBA_ABI, addr ? signer : provider);
+          const net = await provider.getNetwork();
+          document.getElementById('cbbChainId').textContent = net.chainId.toString();
+          document.getElementById('cbbContractAddr').textContent = shortAddr(HARIBA_ADDRESS);
+          await loadDashboard();
+          showMsg('Connected ' + shortAddr(addr), false);
+        } catch (e) {
+          showMsg('Connect failed: ' + (e.message || e), true);
+        }
+      }
+
+      async function enqueueTask() {
+        const kind = parseInt(document.getElementById('cbbTaskKind').value, 10);
+        const due = document.getElementById('cbbTaskDue').value.trim();
+        if (!due) { showMsg('Enter due timestamp.', true); return; }
+        const dueBn = ethers.toBigInt(due);
+        try {
+          const s = await ensureSigner();
+          const c = new ethers.Contract(HARIBA_ADDRESS, HARIBA_ABI, s);
+          const fee = await c.feeWei();
+          const feeStr = weiToEther(fee.toString());
