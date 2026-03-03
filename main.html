@@ -922,3 +922,80 @@
           const c = new ethers.Contract(HARIBA_ADDRESS, HARIBA_ABI, s);
           const fee = await c.feeWei();
           const feeStr = weiToEther(fee.toString());
+          showMsg('Fee: ' + feeStr + ' ether. Sending tx…', false);
+          const tx = await c.enqueueTask(kind, dueBn, { value: fee });
+          showMsg('Tx sent: ' + shortId(tx.hash), false);
+          await tx.wait();
+          showMsg('Task enqueued.', false);
+          loadDashboard();
+          loadTasks();
+        } catch (e) {
+          showMsg('Enqueue failed: ' + (e.message || e), true);
+        }
+      }
+
+      async function setReminder() {
+        const trigger = document.getElementById('cbbReminderTrigger').value.trim();
+        let linked = document.getElementById('cbbReminderLinked').value.trim();
+        if (!trigger) { showMsg('Enter trigger timestamp.', true); return; }
+        if (!linked || linked === '0') linked = '0x' + '0'.repeat(64);
+        try {
+          const s = await ensureSigner();
+          const c = new ethers.Contract(HARIBA_ADDRESS, HARIBA_ABI, s);
+          const tx = await c.setReminder(ethers.toBigInt(trigger), linked);
+          showMsg('Tx sent: ' + shortId(tx.hash), false);
+          await tx.wait();
+          showMsg('Reminder set.', false);
+          loadDashboard();
+          loadReminders();
+        } catch (e) {
+          showMsg('Set reminder failed: ' + (e.message || e), true);
+        }
+      }
+
+      async function createSession() {
+        try {
+          const s = await ensureSigner();
+          const c = new ethers.Contract(HARIBA_ADDRESS, HARIBA_ABI, s);
+          const tx = await c.createSession();
+          showMsg('Tx sent: ' + shortId(tx.hash), false);
+          await tx.wait();
+          showMsg('Session created.', false);
+          loadDashboard();
+          loadSessions();
+        } catch (e) {
+          showMsg('Create session failed: ' + (e.message || e), true);
+        }
+      }
+
+      async function completeTask() {
+        const taskId = document.getElementById('cbbTaskIdAction').value.trim();
+        if (!taskId || !taskId.startsWith('0x')) { showMsg('Enter task ID (0x…).', true); return; }
+        try {
+          const s = await ensureSigner();
+          const c = new ethers.Contract(HARIBA_ADDRESS, HARIBA_ABI, s);
+          const tx = await c.completeTask(taskId);
+          await tx.wait();
+          showMsg('Task completed.', false);
+          loadDashboard();
+          loadTasks();
+        } catch (e) {
+          showMsg('Complete failed: ' + (e.message || e), true);
+        }
+      }
+
+      async function cancelTask() {
+        const taskId = document.getElementById('cbbTaskIdAction').value.trim();
+        if (!taskId || !taskId.startsWith('0x')) { showMsg('Enter task ID (0x…).', true); return; }
+        try {
+          const s = await ensureSigner();
+          const c = new ethers.Contract(HARIBA_ADDRESS, HARIBA_ABI, s);
+          const tx = await c.cancelTask(taskId);
+          await tx.wait();
+          showMsg('Task cancelled.', false);
+          loadDashboard();
+          loadTasks();
+        } catch (e) {
+          showMsg('Cancel failed: ' + (e.message || e), true);
+        }
+      }
