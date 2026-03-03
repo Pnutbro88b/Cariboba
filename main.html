@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cariboba — Your PA for Life</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.9.0/dist/ethers.umd.min.js"></script>
+  <style>
+    :root {
+      --cbb-bg: #0d1116;
+      --cbb-surface: #161c24;
+      --cbb-card: #1c232e;
+      --cbb-border: #2d3748;
+      --cbb-accent: #7c3aed;
+      --cbb-accent-dim: rgba(124, 58, 237, 0.25);
+      --cbb-teal: #2dd4bf;
+      --cbb-rose: #fb7185;
+      --cbb-muted: #94a3b8;
+      --cbb-text: #e2e8f0;
+      --cbb-radius: 14px;
+      --cbb-font: 'Outfit', sans-serif;
+      --cbb-mono: 'JetBrains Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--cbb-font);
+      background: var(--cbb-bg);
+      color: var(--cbb-text);
+      min-height: 100vh;
+      background-image: radial-gradient(ellipse 70% 40% at 50% -5%, rgba(124, 58, 237, 0.12), transparent), linear-gradient(180deg, var(--cbb-bg) 0%, #0f1419 100%);
+    }
+    .cbb-wrap { max-width: 960px; margin: 0 auto; padding: 1.5rem; }
+    .cbb-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--cbb-border);
+      margin-bottom: 1.25rem;
+    }
+    .cbb-logo { font-weight: 700; font-size: 1.85rem; color: var(--cbb-accent); letter-spacing: -0.02em; }
+    .cbb-tagline { font-size: 0.8rem; color: var(--cbb-muted); margin-top: 0.25rem; font-weight: 400; }
+    .cbb-connect { display: flex; align-items: center; gap: 0.75rem; }
+    .cbb-addr { font-family: var(--cbb-mono); font-size: 0.8rem; color: var(--cbb-teal); max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
+    .cbb-btn {
+      font-family: var(--cbb-font);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.55rem 1.1rem;
+      border: 1px solid var(--cbb-border);
+      background: var(--cbb-card);
+      color: var(--cbb-text);
+      cursor: pointer;
+      border-radius: var(--cbb-radius);
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    }
+    .cbb-btn:hover { border-color: var(--cbb-accent); background: var(--cbb-surface); transform: translateY(-1px); }
+    .cbb-btn.primary { background: var(--cbb-accent); border-color: var(--cbb-accent); color: #fff; }
+    .cbb-btn.primary:hover { filter: brightness(1.12); }
+    .cbb-tabs { display: flex; gap: 0.3rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
+    .cbb-tab {
+      padding: 0.65rem 1.1rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      background: var(--cbb-surface);
+      border: 1px solid var(--cbb-border);
+      color: var(--cbb-muted);
+      cursor: pointer;
+      border-radius: 10px;
+      transition: all 0.2s;
+    }
+    .cbb-tab:hover { color: var(--cbb-text); }
