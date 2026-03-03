@@ -306,3 +306,80 @@
         <h3>Create session</h3>
         <button type="button" class="cbb-btn primary" id="cbbCreateSessionBtn">Create session</button>
       </div>
+      <div class="cbb-card">
+        <h3>Complete / Cancel task</h3>
+        <div class="cbb-form-group">
+          <label>Task ID (0x…)</label>
+          <input type="text" id="cbbTaskIdAction" placeholder="0x…" />
+        </div>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <button type="button" class="cbb-btn primary" id="cbbCompleteTaskBtn">Complete</button>
+          <button type="button" class="cbb-btn" id="cbbCancelTaskBtn">Cancel</button>
+        </div>
+      </div>
+      <div class="cbb-card">
+        <h3>Close session</h3>
+        <p class="cbb-h4">Only the session owner or keeper can close. Once closed, no more responses can be logged.</p>
+        <div class="cbb-form-group">
+          <label>Session ID (0x…)</label>
+          <input type="text" id="cbbCloseSessionId" placeholder="0x…" />
+        </div>
+        <button type="button" class="cbb-btn" id="cbbCloseSessionBtn">Close session</button>
+      </div>
+    </section>
+
+    <section class="cbb-panel" id="panel-intents">
+      <div class="cbb-card">
+        <h3>Intents (batch)</h3>
+        <p class="cbb-h4">Intent types 0–7 are reserved for NLU slots on Hariba.</p>
+        <div id="cbbIntentsList" class="cbb-loading">Loading…</div>
+      </div>
+    </section>
+
+    <section class="cbb-panel" id="panel-help">
+      <div class="cbb-card">
+        <h3>Getting started</h3>
+        <p style="margin-bottom:0.75rem; font-size:0.9rem;">Connect your wallet (e.g. MetaMask) to read from and write to the Hariba contract. The contract is deployed at a fixed address; make sure you are on the correct chain. You need a small amount of native token (ETH or chain equivalent) for gas. To enqueue a task you also need to send the current fee in wei (see Dashboard).</p>
+        <div class="cbb-divider"></div>
+        <div class="cbb-h4">Dashboard</div>
+        <p style="font-size:0.85rem; color: var(--cbb-muted); margin-bottom:0.5rem;">Shows global counts (tasks, reminders, sessions, intents), pause status, and fee. If you are connected, it also shows your per-owner counts and balance.</p>
+        <div class="cbb-divider"></div>
+        <div class="cbb-h4">Tasks</div>
+        <p style="font-size:0.85rem; color: var(--cbb-muted); margin-bottom:0.5rem;">Lists the latest tasks in batch. Status: Pending (0), Completed (1), Cancelled (2). Kind: Generic (0), Call (1), Meeting (2), Deadline (3). To add a task, go to Actions and enqueue one; you must pay the current fee in wei.</p>
+        <div class="cbb-divider"></div>
+        <div class="cbb-h4">Reminders</div>
+        <p style="font-size:0.85rem; color: var(--cbb-muted); margin-bottom:0.5rem;">Reminders have a trigger timestamp and an optional linked task ID. Only the relay role can fire them on-chain when the trigger time has passed.</p>
+        <div class="cbb-divider"></div>
+        <div class="cbb-h4">Sessions</div>
+        <p style="font-size:0.85rem; color: var(--cbb-muted); margin-bottom:0.5rem;">Sessions are created by users and can receive response hashes (logged by the oracle) and slot data (curator). Close a session when done so no more responses are appended.</p>
+        <div class="cbb-divider"></div>
+        <div class="cbb-h4">Intents</div>
+        <p style="font-size:0.85rem; color: var(--cbb-muted); margin-bottom:0.5rem;">Intent types 0–7 are reserved for future use (e.g. NLU slot types). Registering an intent is a simple on-chain record.</p>
+        <div class="cbb-divider"></div>
+        <div class="cbb-h4">Actions</div>
+        <p style="font-size:0.85rem; color: var(--cbb-muted);">From the Actions tab you can enqueue a task (with fee), set a reminder, create a session, complete or cancel a task, and close a session. All write operations require a connected wallet and sufficient gas.</p>
+        <div class="cbb-divider"></div>
+        <div class="cbb-h4">Example workflow</div>
+        <ol style="font-size:0.85rem; color: var(--cbb-muted); padding-left:1.25rem; margin-bottom:0.5rem;">
+          <li style="margin-bottom:0.4rem;">Connect your wallet (Connect button).</li>
+          <li style="margin-bottom:0.4rem;">Check Dashboard for fee and your balance.</li>
+          <li style="margin-bottom:0.4rem;">Go to Actions → Enqueue task: pick kind, set due timestamp (or use “Fill 1 day from now”), send tx with fee.</li>
+          <li style="margin-bottom:0.4rem;">Optionally set a reminder (trigger time, optional linked task ID).</li>
+          <li style="margin-bottom:0.4rem;">Create a session if you want to track conversation anchors.</li>
+          <li style="margin-bottom:0.4rem;">Later: complete or cancel a task from Actions (paste task ID).</li>
+          <li style="margin-bottom:0.4rem;">Close a session when done (paste session ID).</li>
+        </ol>
+      </div>
+      <div class="cbb-card">
+        <h3>Timestamps</h3>
+        <p style="font-size:0.85rem; color: var(--cbb-muted);">Use Unix timestamps (seconds since 1970-01-01). For example, one day from now: current time in seconds + 86400. The UI shows human-readable times where possible.</p>
+      </div>
+      <div class="cbb-card">
+        <h3>Data format</h3>
+        <p class="cbb-h4">IDs (task, reminder, session, intent) are bytes32 hex (0x + 64 hex chars). Addresses are 0x + 40 hex (EIP-55 optional). Fee and balances are in wei (1 ether = 1e18 wei). Timestamps are Unix seconds (uint256).</p>
+      </div>
+      <div class="cbb-card">
+        <h3>Quick reference: write functions</h3>
+        <table class="cbb-table" style="font-size:0.8rem;">
+          <thead><tr><th>Function</th><th>Who</th><th>Notes</th></tr></thead>
+          <tbody>
