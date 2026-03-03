@@ -383,3 +383,80 @@
         <table class="cbb-table" style="font-size:0.8rem;">
           <thead><tr><th>Function</th><th>Who</th><th>Notes</th></tr></thead>
           <tbody>
+            <tr><td class="cbb-mono">enqueueTask(kind, dueAt)</td><td>Anyone</td><td>Pay fee in msg.value</td></tr>
+            <tr><td class="cbb-mono">completeTask(taskId)</td><td>Owner, keeper, steward</td><td>—</td></tr>
+            <tr><td class="cbb-mono">cancelTask(taskId)</td><td>Owner, steward</td><td>—</td></tr>
+            <tr><td class="cbb-mono">setReminder(triggerAt, linkedTaskId)</td><td>Anyone</td><td>—</td></tr>
+            <tr><td class="cbb-mono">fireReminder(reminderId)</td><td>Relay only</td><td>When trigger time passed</td></tr>
+            <tr><td class="cbb-mono">storePreference(keyHash, value)</td><td>Anyone</td><td>Key = keccak256(key string)</td></tr>
+            <tr><td class="cbb-mono">createSession()</td><td>Anyone</td><td>—</td></tr>
+            <tr><td class="cbb-mono">closeSession(sessionId)</td><td>Owner, keeper</td><td>—</td></tr>
+            <tr><td class="cbb-mono">logResponse(sessionId, responseHash)</td><td>Oracle only</td><td>—</td></tr>
+            <tr><td class="cbb-mono">recordSlot(sessionId, slotKey, value)</td><td>Curator only</td><td>—</td></tr>
+            <tr><td class="cbb-mono">registerIntent(intentType)</td><td>Anyone</td><td>intentType 0–7</td></tr>
+            <tr><td class="cbb-mono">submitFeedback(refId, rating)</td><td>Anyone</td><td>rating 1–5</td></tr>
+            <tr><td class="cbb-mono">deposit()</td><td>Anyone</td><td>Payable; credits balance</td></tr>
+            <tr><td class="cbb-mono">withdraw(amountWei)</td><td>User</td><td>From own balance</td></tr>
+            <tr><td class="cbb-mono">processWithdrawal(to, amountWei)</td><td>Vault only</td><td>From vault balance</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="cbb-card">
+        <h3>Quick reference: read-only (view) functions</h3>
+        <p class="cbb-h4">No gas cost when called via eth_call; used by Cariboba to display data.</p>
+        <table class="cbb-table" style="font-size:0.8rem;">
+          <thead><tr><th>Function</th><th>Returns</th></tr></thead>
+          <tbody>
+            <tr><td class="cbb-mono">getPlatformStats()</td><td>taskCount, reminderCount, sessionCount, intentCount, deployBlockNum, paused</td></tr>
+            <tr><td class="cbb-mono">getTask(taskId)</td><td>owner, kind, dueAt, status, createdAt</td></tr>
+            <tr><td class="cbb-mono">getReminder(reminderId)</td><td>owner, triggerAt, linkedTaskId, fired, createdAt</td></tr>
+            <tr><td class="cbb-mono">getSession(sessionId)</td><td>owner, startedAt, closedAt, responseCount</td></tr>
+            <tr><td class="cbb-mono">getIntent(intentId)</td><td>owner, intentType, createdAt</td></tr>
+            <tr><td class="cbb-mono">getTaskIdsLength()</td><td>uint256</td></tr>
+            <tr><td class="cbb-mono">getTaskIdAt(index)</td><td>bytes32</td></tr>
+            <tr><td class="cbb-mono">getTaskCountForOwner(owner)</td><td>uint256</td></tr>
+            <tr><td class="cbb-mono">feeWei()</td><td>uint256</td></tr>
+            <tr><td class="cbb-mono">balanceOf(owner)</td><td>uint256</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="cbb-card">
+        <h3>Errors</h3>
+        <p style="font-size:0.85rem; color: var(--cbb-muted); margin-bottom:0.5rem;">Common contract errors: HRB_Paused (contract paused), HRB_ExceedsMaxTasksPerUser (user at cap), HRB_InsufficientDeposit (fee too low or balance too low), HRB_NotRelay (only relay can fire reminder), HRB_Unauthorized (not owner or keeper). Check your wallet and gas; ensure you are on the correct network.</p>
+      </div>
+    </section>
+
+    <section class="cbb-panel" id="panel-about">
+      <div class="cbb-card">
+        <h3>About Cariboba</h3>
+        <p style="margin-bottom:0.75rem; font-size:0.9rem;">Cariboba is the web interface for Hariba — your on-chain PA and assistant ledger. Tasks, reminders, preferences, and session anchors live on the EVM. Connect your wallet to read and write.</p>
+        <div class="cbb-info-row"><span>Contract (Hariba)</span><span id="cbbContractAddr" class="cbb-mono" style="font-size:0.8rem;"></span></div>
+        <div class="cbb-info-row"><span>Chain</span><span id="cbbChainId">—</span></div>
+      </div>
+      <div class="cbb-card">
+        <h3>Hariba roles</h3>
+        <p class="cbb-h4">Immutable addresses set at deploy. Steward configures caps and fees; vault holds deposits; oracle attests; relay fires reminders.</p>
+        <div class="cbb-info-row"><span>Steward</span><span class="cbb-mono" style="font-size:0.75rem;">0x7f3a…d4e7</span></div>
+        <div class="cbb-info-row"><span>Vault</span><span class="cbb-mono" style="font-size:0.75rem;">0x2c8e…9d2</span></div>
+        <div class="cbb-info-row"><span>Oracle</span><span class="cbb-mono" style="font-size:0.75rem;">0x9d4f…3b6</span></div>
+        <div class="cbb-info-row"><span>Relay</span><span class="cbb-mono" style="font-size:0.75rem;">0xe1b6…6e9</span></div>
+      </div>
+      <div class="cbb-card">
+        <h3>Task kinds</h3>
+        <ul style="list-style:none; font-size:0.9rem;">
+          <li class="cbb-row"><span class="cbb-code">0</span> Generic</li>
+          <li class="cbb-row"><span class="cbb-code">1</span> Call</li>
+          <li class="cbb-row"><span class="cbb-code">2</span> Meeting</li>
+          <li class="cbb-row"><span class="cbb-code">3</span> Deadline</li>
+        </ul>
+      </div>
+      <div class="cbb-card">
+        <h3>FAQ</h3>
+        <div class="cbb-section">
+          <div class="cbb-h4">What is Hariba?</div>
+          <p style="font-size:0.85rem; color: var(--cbb-muted);">Hariba is a smart contract that stores tasks, reminders, sessions, and preferences on-chain. Cariboba is the web UI to read and write to it.</p>
+        </div>
+        <div class="cbb-divider"></div>
+        <div class="cbb-section">
+          <div class="cbb-h4">Do I need to pay to enqueue a task?</div>
+          <p style="font-size:0.85rem; color: var(--cbb-muted);">Yes. The contract charges a configurable fee in wei (set by the steward). Check the Dashboard for the current fee.</p>
