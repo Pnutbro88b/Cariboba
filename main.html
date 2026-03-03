@@ -229,3 +229,80 @@
       <button type="button" class="cbb-tab" data-panel="about">About</button>
     </div>
 
+    <div id="cbbMsg" class="cbb-msg" style="display:none;"></div>
+
+    <section class="cbb-panel visible" id="panel-dashboard">
+      <div class="cbb-stats" id="cbbStats">
+        <div class="cbb-stat"><span class="val" id="statTasks">0</span><span class="lbl">Tasks</span></div>
+        <div class="cbb-stat"><span class="val" id="statReminders">0</span><span class="lbl">Reminders</span></div>
+        <div class="cbb-stat"><span class="val" id="statSessions">0</span><span class="lbl">Sessions</span></div>
+        <div class="cbb-stat"><span class="val" id="statIntents">0</span><span class="lbl">Intents</span></div>
+        <div class="cbb-stat"><span class="val" id="statPaused">—</span><span class="lbl">Paused</span></div>
+        <div class="cbb-stat"><span class="val" id="statFee">—</span><span class="lbl">Fee (wei)</span></div>
+      </div>
+      <div class="cbb-card">
+        <h3>Platform info</h3>
+        <div id="cbbPlatformInfo"></div>
+      </div>
+      <div class="cbb-card">
+        <h3>Your summary</h3>
+        <div id="cbbYourSummary"></div>
+      </div>
+    </section>
+
+    <section class="cbb-panel" id="panel-tasks">
+      <div class="cbb-card">
+        <h3>Tasks (batch)</h3>
+        <div id="cbbTasksList" class="cbb-loading">Loading…</div>
+      </div>
+    </section>
+
+    <section class="cbb-panel" id="panel-reminders">
+      <div class="cbb-card">
+        <h3>Reminders (batch)</h3>
+        <div id="cbbRemindersList" class="cbb-loading">Loading…</div>
+      </div>
+    </section>
+
+    <section class="cbb-panel" id="panel-sessions">
+      <div class="cbb-card">
+        <h3>Sessions (batch)</h3>
+        <div id="cbbSessionsList" class="cbb-loading">Loading…</div>
+      </div>
+    </section>
+
+    <section class="cbb-panel" id="panel-actions">
+      <div class="cbb-card">
+        <h3>Enqueue task</h3>
+        <p style="font-size:0.85rem; color: var(--cbb-muted); margin-bottom: 1rem;">Requires fee in wei. Kind: 0=generic, 1=call, 2=meeting, 3=deadline.</p>
+        <div class="cbb-form-group">
+          <label>Kind</label>
+          <select id="cbbTaskKind">
+            <option value="0">Generic</option>
+            <option value="1">Call</option>
+            <option value="2">Meeting</option>
+            <option value="3">Deadline</option>
+          </select>
+        </div>
+        <div class="cbb-form-group">
+          <label>Due timestamp</label>
+          <input type="text" id="cbbTaskDue" placeholder="Unix timestamp" />
+        </div>
+        <button type="button" class="cbb-btn primary" id="cbbEnqueueTaskBtn">Enqueue task (pay fee)</button>
+      </div>
+      <div class="cbb-card">
+        <h3>Set reminder</h3>
+        <div class="cbb-form-group">
+          <label>Trigger timestamp</label>
+          <input type="text" id="cbbReminderTrigger" placeholder="Unix timestamp" />
+        </div>
+        <div class="cbb-form-group">
+          <label>Linked task ID (0x… or leave 0)</label>
+          <input type="text" id="cbbReminderLinked" placeholder="0x… or 0" />
+        </div>
+        <button type="button" class="cbb-btn primary" id="cbbSetReminderBtn">Set reminder</button>
+      </div>
+      <div class="cbb-card">
+        <h3>Create session</h3>
+        <button type="button" class="cbb-btn primary" id="cbbCreateSessionBtn">Create session</button>
+      </div>
